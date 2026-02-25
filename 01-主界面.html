@@ -1,0 +1,823 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主界面 - XX选煤班组安全平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #2563EB;
+            --primary-light: #3B82F6;
+            --primary-dark: #1E40AF;
+            --cta-color: #F97316;
+            --cta-hover: #EA580C;
+            --bg-color: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-color: #1E293B;
+            --text-secondary: #64748B;
+            --border-color: #E2E8F0;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Open Sans', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        /* 顶部导航栏 */
+        .navbar {
+            background-color: var(--card-bg);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 0 32px;
+            height: 64px;
+            flex-shrink: 0;
+        }
+
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .navbar-brand i {
+            font-size: 24px;
+        }
+
+        .navbar-nav {
+            gap: 8px;
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* 主内容区 */
+        .main-content {
+            padding: 24px 32px;
+            height: calc(100vh - 64px);
+            overflow: hidden;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr 280px;
+            gap: 24px;
+            height: 100%;
+        }
+
+        /* 左侧菜单 */
+        .sidebar-menu {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+            color: var(--primary-color);
+        }
+
+        .menu-item.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .menu-item i {
+            font-size: 18px;
+        }
+
+        /* 中间主内容 */
+        .main-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            overflow-y: auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 16px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .card-header i {
+            color: var(--primary-color);
+        }
+
+        /* 会议信息 */
+        .meeting-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* 流程进度 */
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 0;
+        }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .step-status {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .step-completed .step-icon {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .step-current .step-icon {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* 右侧信息栏 */
+        .info-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .attendee-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .attendee-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .attendee-item:last-child {
+            border-bottom: none;
+        }
+
+        .attendee-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+        }
+
+        .attendee-info {
+            flex: 1;
+        }
+
+        .attendee-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .attendee-role {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .attendee-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-present {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-absent {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+
+        /* 出勤率统计 - 紧凑版 */
+        .attendance-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 12px;
+            background: var(--bg-color);
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        /* 按钮样式 */
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .btn-cta {
+            background: linear-gradient(135deg, var(--cta-color), var(--cta-hover));
+            color: white;
+            border: none;
+            padding: 14px 48px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(249, 115, 22, 0.4);
+        }
+
+        .btn-cta:focus-visible {
+            outline: 2px solid var(--cta-color);
+            outline-offset: 2px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+
+        .btn-outline:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* 按钮区域 */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .content-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .sidebar-menu {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 16px;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .meeting-info {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn-primary, .btn-cta, .btn-outline {
+                width: 100%;
+            }
+        }
+
+        /* 减少动画偏好 */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-shield-check"></i>
+                <span>XX选煤班组安全平台</span>
+            </a>
+            <div class="navbar-nav">
+                <a class="nav-link active" href="#">班前会</a>
+                <a class="nav-link" href="#">班后会</a>
+                <a class="nav-link" href="#">学习会</a>
+            </div>
+            <div class="user-info">
+                <img src="https://via.placeholder.com/36" alt="张班长的头像" class="user-avatar">
+                <span class="user-name">张班长</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <div class="content-grid">
+            <!-- 左侧菜单 -->
+            <div class="sidebar-menu">
+                <div class="menu-item active">
+                    <i class="bi bi-play-circle"></i>
+                    <span>班前会</span>
+                </div>
+                <div class="menu-item">
+                    <i class="bi bi-stop-circle"></i>
+                    <span>班后会</span>
+                </div>
+                <div class="menu-item">
+                    <i class="bi bi-book"></i>
+                    <span>学习会</span>
+                </div>
+            </div>
+
+            <!-- 中间主内容 -->
+            <div class="main-panel">
+                <!-- 会议信息卡片 -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-info-circle"></i>
+                        会议信息
+                    </div>
+                    <div class="meeting-info">
+                        <div class="info-item">
+                            <span class="info-label">会议主题</span>
+                            <span class="info-value">2026年1月16日班前会</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">会议时间</span>
+                            <span class="info-value">08:00 - 08:30</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">班组名称</span>
+                            <span class="info-value">机电维修班</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">会议地点</span>
+                            <span class="info-value">调度会议室</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 会议流程进度卡片 -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-list-check"></i>
+                        会议流程
+                    </div>
+                    <div>
+                        <div class="progress-step" id="step-1">
+                            <div class="step-icon">
+                                <i class="bi bi-person-check"></i>
+                            </div>
+                            <div class="step-content">
+                                <div class="step-title">点名及确认安全</div>
+                                <div class="step-status">待开始</div>
+                            </div>
+                        </div>
+
+                        <div class="progress-step" id="step-2">
+                            <div class="step-icon">
+                                <i class="bi bi-music-note"></i>
+                            </div>
+                            <div class="step-content">
+                                <div class="step-title">集体唱班歌</div>
+                                <div class="step-status">待开始</div>
+                            </div>
+                        </div>
+
+                        <div class="progress-step" id="step-3">
+                            <div class="step-icon">
+                                <i class="bi bi-file-text"></i>
+                            </div>
+                            <div class="step-content">
+                                <div class="step-title">传达会议精神与文件学习</div>
+                                <div class="step-status">待开始</div>
+                            </div>
+                        </div>
+
+                        <div class="progress-step" id="step-4">
+                            <div class="step-icon">
+                                <i class="bi bi-exclamation-triangle"></i>
+                            </div>
+                            <div class="step-content">
+                                <div class="step-title">事故案例学习</div>
+                                <div class="step-status">待开始</div>
+                            </div>
+                        </div>
+
+                        <div class="progress-step" id="step-5">
+                            <div class="step-icon">
+                                <i class="bi bi-clipboard-data"></i>
+                            </div>
+                            <div class="step-content">
+                                <div class="step-title">工作安排和现场风险研判</div>
+                                <div class="step-status">待开始</div>
+                            </div>
+                        </div>
+
+                        <div class="progress-step" id="step-6">
+                            <div class="step-icon">
+                                <i class="bi bi-journal-check"></i>
+                            </div>
+                            <div class="step-content">
+                                <div class="step-title">每日一学和应知应会的抽查</div>
+                                <div class="step-status">待开始</div>
+                            </div>
+                        </div>
+
+                        <div class="progress-step" id="step-7">
+                            <div class="step-icon">
+                                <i class="bi bi-hand-index-thumb"></i>
+                            </div>
+                            <div class="step-content">
+                                <div class="step-title">安全宣誓</div>
+                                <div class="step-status">待开始</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 按钮区域 -->
+                <div class="button-group">
+                    <button class="btn-outline" onclick="window.location.href='00-班前会准备界面.html'">
+                        <i class="bi bi-pencil-square"></i>
+                        准备班前会
+                    </button>
+                    <button class="btn-cta" onclick="startMeeting()">
+                        <i class="bi bi-play-fill"></i>
+                        开始班前会
+                    </button>
+                </div>
+            </div>
+
+            <!-- 右侧信息栏 -->
+            <div class="info-panel">
+                <!-- 参会人员卡片 -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-people"></i>
+                        参会人员
+                    </div>
+                    <div class="attendee-list">
+                        <div class="attendee-item">
+                            <img src="https://via.placeholder.com/36" alt="张班长的头像" class="attendee-avatar">
+                            <div class="attendee-info">
+                                <div class="attendee-name">张班长</div>
+                                <div class="attendee-role">班组长</div>
+                            </div>
+                            <span class="attendee-status status-present">已签到</span>
+                        </div>
+
+                        <div class="attendee-item">
+                            <img src="https://via.placeholder.com/36" alt="李安全员的头像" class="attendee-avatar">
+                            <div class="attendee-info">
+                                <div class="attendee-name">李安全员</div>
+                                <div class="attendee-role">安全员</div>
+                            </div>
+                            <span class="attendee-status status-present">已签到</span>
+                        </div>
+
+                        <div class="attendee-item">
+                            <img src="https://via.placeholder.com/36" alt="王技术员的头像" class="attendee-avatar">
+                            <div class="attendee-info">
+                                <div class="attendee-name">王技术员</div>
+                                <div class="attendee-role">技术员</div>
+                            </div>
+                            <span class="attendee-status status-present">已签到</span>
+                        </div>
+
+                        <div class="attendee-item">
+                            <img src="https://via.placeholder.com/36" alt="赵维修工的头像" class="attendee-avatar">
+                            <div class="attendee-info">
+                                <div class="attendee-name">赵维修工</div>
+                                <div class="attendee-role">维修工</div>
+                            </div>
+                            <span class="attendee-status status-present">已签到</span>
+                        </div>
+
+                        <div class="attendee-item">
+                            <img src="https://via.placeholder.com/36" alt="孙维修工的头像" class="attendee-avatar">
+                            <div class="attendee-info">
+                                <div class="attendee-name">孙维修工</div>
+                                <div class="attendee-role">维修工</div>
+                            </div>
+                            <span class="attendee-status status-absent">未签到</span>
+                        </div>
+
+                        <div class="attendee-item">
+                            <img src="https://via.placeholder.com/36" alt="周维修工的头像" class="attendee-avatar">
+                            <div class="attendee-info">
+                                <div class="attendee-name">周维修工</div>
+                                <div class="attendee-role">维修工</div>
+                            </div>
+                            <span class="attendee-status status-present">已签到</span>
+                        </div>
+
+                        <div class="attendee-item">
+                            <img src="https://via.placeholder.com/36" alt="吴操作工的头像" class="attendee-avatar">
+                            <div class="attendee-info">
+                                <div class="attendee-name">吴操作工</div>
+                                <div class="attendee-role">操作工</div>
+                            </div>
+                            <span class="attendee-status status-present">已签到</span>
+                        </div>
+
+                        <div class="attendee-item">
+                            <img src="https://via.placeholder.com/36" alt="郑操作工的头像" class="attendee-avatar">
+                            <div class="attendee-info">
+                                <div class="attendee-name">郑操作工</div>
+                                <div class="attendee-role">操作工</div>
+                            </div>
+                            <span class="attendee-status status-present">已签到</span>
+                        </div>
+
+                        <div class="attendee-item">
+                            <img src="https://via.placeholder.com/36" alt="冯电工的头像" class="attendee-avatar">
+                            <div class="attendee-info">
+                                <div class="attendee-name">冯电工</div>
+                                <div class="attendee-role">电工</div>
+                            </div>
+                            <span class="attendee-status status-present">已签到</span>
+                        </div>
+
+                        <div class="attendee-item">
+                            <img src="https://via.placeholder.com/36" alt="陈电工的头像" class="attendee-avatar">
+                            <div class="attendee-info">
+                                <div class="attendee-name">陈电工</div>
+                                <div class="attendee-role">电工</div>
+                            </div>
+                            <span class="attendee-status status-present">已签到</span>
+                        </div>
+
+                        <div class="attendee-item">
+                            <img src="https://via.placeholder.com/36" alt="楚调度员的头像" class="attendee-avatar">
+                            <div class="attendee-info">
+                                <div class="attendee-name">楚调度员</div>
+                                <div class="attendee-role">调度员</div>
+                            </div>
+                            <span class="attendee-status status-present">已签到</span>
+                        </div>
+
+                        <div class="attendee-item">
+                            <img src="https://via.placeholder.com/36" alt="魏质检员的头像" class="attendee-avatar">
+                            <div class="attendee-info">
+                                <div class="attendee-name">魏质检员</div>
+                                <div class="attendee-role">质检员</div>
+                            </div>
+                            <span class="attendee-status status-absent">未签到</span>
+                        </div>
+                    </div>
+
+                    <!-- 出勤率统计 -->
+                    <div class="attendance-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">总人数</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">10</div>
+                            <div class="stat-label">已签到</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">83%</div>
+                            <div class="stat-label">出勤率</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function startMeeting() {
+            // 检查是否已完成准备工作
+            const isPrepared = confirm('是否已完成班前会准备工作？');
+            
+            if (isPrepared) {
+                // 跳转到第一个环节
+                window.location.href = '02-点名及确认安全界面.html';
+            } else {
+                // 提示先完成准备工作
+                alert('请先完成班前会准备工作！');
+                window.location.href = '00-班前会准备界面.html';
+            }
+        }
+    </script>
+</body>
+</html>
