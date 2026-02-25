@@ -1,0 +1,790 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>点名及确认安全 - XX选煤班组安全平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #2563EB;
+            --primary-light: #3B82F6;
+            --primary-dark: #1E40AF;
+            --cta-color: #F97316;
+            --cta-hover: #EA580C;
+            --bg-color: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-color: #1E293B;
+            --text-secondary: #64748B;
+            --border-color: #E2E8F0;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Open Sans', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        .navbar {
+            background-color: var(--card-bg);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 0 32px;
+            height: 64px;
+            flex-shrink: 0;
+        }
+
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .navbar-brand i {
+            font-size: 24px;
+        }
+
+        .navbar-nav {
+            gap: 8px;
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .main-content {
+            padding: 24px 32px;
+            height: calc(100vh - 64px);
+            overflow: hidden;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-color);
+        }
+
+        .signin-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+            height: calc(100% - 100px);
+        }
+
+        .sidebar-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .sidebar-header i {
+            color: var(--primary-color);
+        }
+
+        .signin-method {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .signin-method:hover {
+            border-color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .signin-method.active {
+            border-color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .signin-method-icon {
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .signin-method-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .signin-method-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .main-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .main-header i {
+            color: var(--primary-color);
+        }
+
+        .attendee-list {
+            flex: 1;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .attendee-card {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .attendee-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .attendee-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+        }
+
+        .attendee-info {
+            flex: 1;
+        }
+
+        .attendee-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .attendee-role {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .attendee-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: rgba(100, 116, 139, 0.1);
+            color: var(--text-secondary);
+        }
+
+        .status-present {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-absent {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+
+        .safety-confirm {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .safety-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .safety-btn:hover {
+            border-color: var(--primary-color);
+        }
+
+        .safety-btn:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .safety-btn.good {
+            color: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .safety-btn.good.active {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .safety-btn.normal {
+            color: var(--warning-color);
+            border-color: var(--warning-color);
+        }
+
+        .safety-btn.normal.active {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .safety-btn.bad {
+            color: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+
+        .safety-btn.bad.active {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-checkin {
+            width: 100%;
+            padding: 10px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+
+        .btn-checkin:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-checkin:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        .btn-checkin:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .checkin-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 16px;
+            background: var(--bg-color);
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-value.primary {
+            color: var(--primary-color);
+        }
+
+        .stat-value.success {
+            color: var(--success-color);
+        }
+
+        .stat-value.warning {
+            color: var(--warning-color);
+        }
+
+        .stat-value.danger {
+            color: var(--danger-color);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-primary:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+
+        .btn-outline:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        @media (max-width: 1200px) {
+            .signin-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar-card {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 16px;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .attendee-list {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn-primary, .btn-outline {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="01-主界面.html">
+                <i class="bi bi-shield-check"></i>
+                <span>XX选煤班组安全平台</span>
+            </a>
+            <div class="navbar-nav">
+                <a class="nav-link active" href="#">班前会</a>
+                <a class="nav-link" href="#">班后会</a>
+                <a class="nav-link" href="#">学习会</a>
+            </div>
+            <div class="user-info">
+                <img src="https://via.placeholder.com/36" alt="张班长的头像" class="user-avatar">
+                <span class="user-name">张班长</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <h1 class="page-title">点名及确认安全</h1>
+
+        <div class="signin-grid">
+            <div class="sidebar-card">
+                <div class="sidebar-header">
+                    <i class="bi bi-person-check"></i>
+                    <span>签到方式</span>
+                </div>
+
+                <div class="signin-method active" onclick="selectSigninMethod('qrcode')">
+                    <div class="signin-method-icon">
+                        <i class="bi bi-qr-code-scan"></i>
+                    </div>
+                    <div class="signin-method-title">扫码签到</div>
+                    <div class="signin-method-desc">员工使用手机扫码签到</div>
+                </div>
+
+                <div class="signin-method" onclick="selectSigninMethod('manual')">
+                    <div class="signin-method-icon">
+                        <i class="bi bi-hand-index"></i>
+                    </div>
+                    <div class="signin-method-title">手动签到</div>
+                    <div class="signin-method-desc">班组长手动点击签到</div>
+                </div>
+            </div>
+
+            <div class="main-card">
+                <div class="main-header">
+                    <i class="bi bi-people"></i>
+                    <span>参会人员</span>
+                </div>
+
+                <div class="attendee-list">
+                    <div class="attendee-card">
+                        <div class="attendee-header">
+                            <img src="https://via.placeholder.com/48" alt="张班长的头像" class="attendee-avatar">
+                            <div class="attendee-info">
+                                <div class="attendee-name">张班长</div>
+                                <div class="attendee-role">班组长</div>
+                            </div>
+                            <span class="attendee-status status-present">已签到</span>
+                        </div>
+                        <div class="safety-confirm">
+                            <button class="safety-btn good active" onclick="selectSafety(this, 'good')" aria-label="状态良好">状态良好</button>
+                            <button class="safety-btn normal" onclick="selectSafety(this, 'normal')" aria-label="状态一般">状态一般</button>
+                            <button class="safety-btn bad" onclick="selectSafety(this, 'bad')" aria-label="状态不佳">状态不佳</button>
+                        </div>
+                    </div>
+
+                    <div class="attendee-card">
+                        <div class="attendee-header">
+                            <img src="https://via.placeholder.com/48" alt="李安全员的头像" class="attendee-avatar">
+                            <div class="attendee-info">
+                                <div class="attendee-name">李安全员</div>
+                                <div class="attendee-role">安全员</div>
+                            </div>
+                            <span class="attendee-status status-present">已签到</span>
+                        </div>
+                        <div class="safety-confirm">
+                            <button class="safety-btn good active" onclick="selectSafety(this, 'good')" aria-label="状态良好">状态良好</button>
+                            <button class="safety-btn normal" onclick="selectSafety(this, 'normal')" aria-label="状态一般">状态一般</button>
+                            <button class="safety-btn bad" onclick="selectSafety(this, 'bad')" aria-label="状态不佳">状态不佳</button>
+                        </div>
+                    </div>
+
+                    <div class="attendee-card">
+                        <div class="attendee-header">
+                            <img src="https://via.placeholder.com/48" alt="王技术员的头像" class="attendee-avatar">
+                            <div class="attendee-info">
+                                <div class="attendee-name">王技术员</div>
+                                <div class="attendee-role">技术员</div>
+                            </div>
+                            <span class="attendee-status status-present">已签到</span>
+                        </div>
+                        <div class="safety-confirm">
+                            <button class="safety-btn good active" onclick="selectSafety(this, 'good')" aria-label="状态良好">状态良好</button>
+                            <button class="safety-btn normal" onclick="selectSafety(this, 'normal')" aria-label="状态一般">状态一般</button>
+                            <button class="safety-btn bad" onclick="selectSafety(this, 'bad')" aria-label="状态不佳">状态不佳</button>
+                        </div>
+                    </div>
+
+                    <div class="attendee-card">
+                        <div class="attendee-header">
+                            <img src="https://via.placeholder.com/48" alt="赵维修工的头像" class="attendee-avatar">
+                            <div class="attendee-info">
+                                <div class="attendee-name">赵维修工</div>
+                                <div class="attendee-role">维修工</div>
+                            </div>
+                            <span class="attendee-status status-pending">待签到</span>
+                        </div>
+                        <button class="btn-checkin" onclick="manualCheckin(this)" aria-label="手动签到">手动签到</button>
+                    </div>
+
+                    <div class="attendee-card">
+                        <div class="attendee-header">
+                            <img src="https://via.placeholder.com/48" alt="孙维修工的头像" class="attendee-avatar">
+                            <div class="attendee-info">
+                                <div class="attendee-name">孙维修工</div>
+                                <div class="attendee-role">维修工</div>
+                            </div>
+                            <span class="attendee-status status-absent">未签到</span>
+                        </div>
+                        <button class="btn-checkin" onclick="manualCheckin(this)" aria-label="手动签到">手动签到</button>
+                    </div>
+
+                    <div class="attendee-card">
+                        <div class="attendee-header">
+                            <img src="https://via.placeholder.com/48" alt="周维修工的头像" class="attendee-avatar">
+                            <div class="attendee-info">
+                                <div class="attendee-name">周维修工</div>
+                                <div class="attendee-role">维修工</div>
+                            </div>
+                            <span class="attendee-status status-present">已签到</span>
+                        </div>
+                        <div class="safety-confirm">
+                            <button class="safety-btn good active" onclick="selectSafety(this, 'good')" aria-label="状态良好">状态良好</button>
+                            <button class="safety-btn normal" onclick="selectSafety(this, 'normal')" aria-label="状态一般">状态一般</button>
+                            <button class="safety-btn bad" onclick="selectSafety(this, 'bad')" aria-label="状态不佳">状态不佳</button>
+                        </div>
+                    </div>
+
+                    <div class="attendee-card">
+                        <div class="attendee-header">
+                            <img src="https://via.placeholder.com/48" alt="吴操作工的头像" class="attendee-avatar">
+                            <div class="attendee-info">
+                                <div class="attendee-name">吴操作工</div>
+                                <div class="attendee-role">操作工</div>
+                            </div>
+                            <span class="attendee-status status-present">已签到</span>
+                        </div>
+                        <div class="safety-confirm">
+                            <button class="safety-btn good active" onclick="selectSafety(this, 'good')" aria-label="状态良好">状态良好</button>
+                            <button class="safety-btn normal" onclick="selectSafety(this, 'normal')" aria-label="状态一般">状态一般</button>
+                            <button class="safety-btn bad" onclick="selectSafety(this, 'bad')" aria-label="状态不佳">状态不佳</button>
+                        </div>
+                    </div>
+
+                    <div class="attendee-card">
+                        <div class="attendee-header">
+                            <img src="https://via.placeholder.com/48" alt="郑操作工的头像" class="attendee-avatar">
+                            <div class="attendee-info">
+                                <div class="attendee-name">郑操作工</div>
+                                <div class="attendee-role">操作工</div>
+                            </div>
+                            <span class="attendee-status status-present">已签到</span>
+                        </div>
+                        <div class="safety-confirm">
+                            <button class="safety-btn good active" onclick="selectSafety(this, 'good')" aria-label="状态良好">状态良好</button>
+                            <button class="safety-btn normal" onclick="selectSafety(this, 'normal')" aria-label="状态一般">状态一般</button>
+                            <button class="safety-btn bad" onclick="selectSafety(this, 'bad')" aria-label="状态不佳">状态不佳</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkin-stats">
+                    <div class="stat-card">
+                        <div class="stat-value primary">12</div>
+                        <div class="stat-label">总人数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value success">10</div>
+                        <div class="stat-label">已签到</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value warning">1</div>
+                        <div class="stat-label">待签到</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value danger">1</div>
+                        <div class="stat-label">未签到</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-outline" onclick="goToPage('01-主界面')">
+                <i class="bi bi-arrow-left"></i>
+                返回
+            </button>
+            <button class="btn-primary" onclick="goToPage('03-集体唱班歌界面')">
+                下一步
+                <i class="bi bi-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function selectSigninMethod(method) {
+            const methods = document.querySelectorAll('.signin-method');
+            methods.forEach(m => m.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+
+        function selectSafety(btn, status) {
+            const card = btn.closest('.attendee-card');
+            const buttons = card.querySelectorAll('.safety-btn');
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function manualCheckin(btn) {
+            const card = btn.closest('.attendee-card');
+            const statusBadge = card.querySelector('.attendee-status');
+            
+            statusBadge.classList.remove('status-pending', 'status-absent');
+            statusBadge.classList.add('status-present');
+            statusBadge.textContent = '已签到';
+            
+            btn.remove();
+            
+            const safetyConfirm = document.createElement('div');
+            safetyConfirm.className = 'safety-confirm';
+            safetyConfirm.innerHTML = `
+                <button class="safety-btn good active" onclick="selectSafety(this, 'good')" aria-label="状态良好">状态良好</button>
+                <button class="safety-btn normal" onclick="selectSafety(this, 'normal')" aria-label="状态一般">状态一般</button>
+                <button class="safety-btn bad" onclick="selectSafety(this, 'bad')" aria-label="状态不佳">状态不佳</button>
+            `;
+            card.appendChild(safetyConfirm);
+        }
+
+        function goToPage(pageName) {
+            window.location.href = pageName + '.html';
+        }
+    </script>
+</body>
+</html>
