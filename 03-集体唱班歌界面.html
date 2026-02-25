@@ -1,0 +1,490 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>集体唱班歌 - XX选煤班组安全平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #2563EB;
+            --primary-light: #3B82F6;
+            --primary-dark: #1E40AF;
+            --cta-color: #F97316;
+            --cta-hover: #EA580C;
+            --bg-color: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-color: #1E293B;
+            --text-secondary: #64748B;
+            --border-color: #E2E8F0;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Open Sans', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        .navbar {
+            background-color: var(--card-bg);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 0 32px;
+            height: 64px;
+            flex-shrink: 0;
+        }
+
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .navbar-brand i {
+            font-size: 24px;
+        }
+
+        .navbar-nav {
+            gap: 8px;
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .main-content {
+            padding: 24px 32px;
+            height: calc(100vh - 64px);
+            overflow: hidden;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-color);
+        }
+
+        .video-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100% - 100px);
+            padding: 20px;
+        }
+
+        .video-player {
+            width: 100%;
+            max-width: 900px;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .video-player video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .video-info {
+            width: 100%;
+            max-width: 900px;
+            margin-top: 20px;
+        }
+
+        .video-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .video-meta {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .video-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .control-btn {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 20px;
+        }
+
+        .control-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .control-btn:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .control-btn.play {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 24px;
+        }
+
+        .control-btn.play:hover {
+            background: var(--primary-dark);
+        }
+
+        .control-btn.play:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            max-width: 900px;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 16px;
+            cursor: pointer;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .time-display {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+
+        .btn-outline:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 16px;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .video-player {
+                max-width: 100%;
+            }
+
+            .video-title {
+                font-size: 18px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn-primary, .btn-outline {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="01-主界面.html">
+                <i class="bi bi-shield-check"></i>
+                <span>XX选煤班组安全平台</span>
+            </a>
+            <div class="navbar-nav">
+                <a class="nav-link active" href="#">班前会</a>
+                <a class="nav-link" href="#">班后会</a>
+                <a class="nav-link" href="#">学习会</a>
+            </div>
+            <div class="user-info">
+                <img src="https://via.placeholder.com/36" alt="张班长的头像" class="user-avatar">
+                <span class="user-name">张班长</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <h1 class="page-title">集体唱班歌</h1>
+
+        <div class="video-container">
+            <div class="video-player">
+                <video id="videoPlayer" poster="https://via.placeholder.com/900x506">
+                    <source src="https://example.com/banquge.mp4" type="video/mp4">
+                    您的浏览器不支持视频播放
+                </video>
+            </div>
+
+            <div class="video-info">
+                <div class="video-title">《安全为天》- XX选煤分公司班歌</div>
+                <div class="video-meta">时长: 03:28 | 分辨率: 1080p</div>
+            </div>
+
+            <div class="video-controls">
+                <button class="control-btn" onclick="toggleMute()" aria-label="静音">
+                    <i class="bi bi-volume-up" id="muteIcon"></i>
+                </button>
+                <button class="control-btn" onclick="seekVideo(-10)" aria-label="后退10秒">
+                    <i class="bi bi-skip-start-fill"></i>
+                </button>
+                <button class="control-btn play" onclick="togglePlay()" aria-label="播放/暂停">
+                    <i class="bi bi-play-fill" id="playIcon"></i>
+                </button>
+                <button class="control-btn" onclick="seekVideo(10)" aria-label="前进10秒">
+                    <i class="bi bi-skip-end-fill"></i>
+                </button>
+                <button class="control-btn" onclick="toggleFullscreen()" aria-label="全屏">
+                    <i class="bi bi-fullscreen"></i>
+                </button>
+            </div>
+
+            <div class="progress-bar" onclick="seekToPosition(event)">
+                <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+            </div>
+
+            <div class="time-display">
+                <span id="currentTime">00:00</span>
+                <span id="duration">03:28</span>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-outline" onclick="goToPage('02-点名及确认安全界面')">
+                <i class="bi bi-arrow-left"></i>
+                返回
+            </button>
+            <button class="btn-primary" onclick="goToPage('04-传达会议精神与文件学习界面')">
+                下一步
+                <i class="bi bi-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const video = document.getElementById('videoPlayer');
+        const playIcon = document.getElementById('playIcon');
+        const progressBar = document.getElementById('progressBar');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('duration');
+        const muteIcon = document.getElementById('muteIcon');
+
+        let isPlaying = false;
+        let isMuted = false;
+
+        function togglePlay() {
+            if (isPlaying) {
+                video.pause();
+                playIcon.className = 'bi bi-play-fill';
+            } else {
+                video.play();
+                playIcon.className = 'bi bi-pause-fill';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function toggleMute() {
+            video.muted = !video.muted;
+            isMuted = video.muted;
+            muteIcon.className = isMuted ? 'bi bi-volume-mute' : 'bi bi-volume-up';
+        }
+
+        function seekVideo(seconds) {
+            video.currentTime += seconds;
+        }
+
+        function seekToPosition(event) {
+            const rect = event.currentTarget.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const percentage = x / rect.width;
+            video.currentTime = percentage * video.duration;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                video.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        video.addEventListener('timeupdate', () => {
+            const progress = (video.currentTime / video.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+            currentTimeEl.textContent = formatTime(video.currentTime);
+        });
+
+        video.addEventListener('loadedmetadata', () => {
+            durationEl.textContent = formatTime(video.duration);
+        });
+
+        video.addEventListener('ended', () => {
+            isPlaying = false;
+            playIcon.className = 'bi bi-play-fill';
+        });
+
+        function goToPage(pageName) {
+            window.location.href = pageName + '.html';
+        }
+    </script>
+</body>
+</html>
