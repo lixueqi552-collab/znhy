@@ -1,0 +1,551 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个性化配置 - XX选煤班组安全平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #2563EB;
+            --primary-light: #3B82F6;
+            --primary-dark: #1E40AF;
+            --cta-color: #F97316;
+            --cta-hover: #EA580C;
+            --bg-color: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-color: #1E293B;
+            --text-secondary: #64748B;
+            --border-color: #E2E8F0;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Open Sans', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        .navbar {
+            background-color: var(--card-bg);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 0 32px;
+            height: 64px;
+            flex-shrink: 0;
+        }
+
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .navbar-brand i {
+            font-size: 24px;
+        }
+
+        .navbar-nav {
+            gap: 8px;
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .main-content {
+            padding: 24px 32px;
+            height: calc(100vh - 64px);
+            overflow: hidden;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-color);
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            height: calc(100% - 100px);
+        }
+
+        .config-column {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .column-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .column-header i {
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        .column-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-color);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-control {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 14px;
+            transition: all 0.2s;
+            background-color: var(--bg-color);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-control:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        textarea.form-control {
+            resize: none;
+            min-height: 100px;
+        }
+
+        .file-upload {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 32px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .file-upload i {
+            font-size: 48px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .file-upload p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        .file-upload p:last-child {
+            margin-top: 8px;
+        }
+
+        .file-upload:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .uploaded-file {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .uploaded-file-icon {
+            font-size: 24px;
+            color: var(--success-color);
+        }
+
+        .uploaded-file-info {
+            flex: 1;
+        }
+
+        .uploaded-file-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .uploaded-file-meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .uploaded-file-delete {
+            background: transparent;
+            border: none;
+            color: var(--danger-color);
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .uploaded-file-delete:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .uploaded-file-delete:focus-visible {
+            outline: 2px solid var(--danger-color);
+            outline-offset: 2px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+
+        .btn-outline:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        @media (max-width: 1200px) {
+            .config-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 16px;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .config-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn-primary, .btn-outline {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="01-主界面.html">
+                <i class="bi bi-shield-check"></i>
+                <span>XX选煤班组安全平台</span>
+            </a>
+            <div class="navbar-nav">
+                <a class="nav-link active" href="#">班前会</a>
+                <a class="nav-link" href="#">班后会</a>
+                <a class="nav-link" href="#">学习会</a>
+            </div>
+            <div class="user-info">
+                <img src="https://via.placeholder.com/36" alt="张班长的头像" class="user-avatar">
+                <span class="user-name">张班长</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <h1 class="page-title">个性化配置</h1>
+
+        <div class="config-grid">
+            <div class="config-column">
+                <div class="column-header">
+                    <i class="bi bi-music-note"></i>
+                    <span class="column-title">班歌配置</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="songName">班歌名称</label>
+                    <input type="text" class="form-control" id="songName" value="安全为天" aria-label="班歌名称">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">班歌文件</label>
+                    <div class="file-upload" onclick="document.getElementById('songFile').click()" role="button" tabindex="0" aria-label="上传班歌文件">
+                        <i class="bi bi-cloud-upload"></i>
+                        <p>点击或拖拽上传班歌文件</p>
+                        <p>支持 MP3、WAV 格式，最大 50MB</p>
+                        <input type="file" id="songFile" accept=".mp3,.wav" style="display: none;" aria-label="班歌文件输入">
+                    </div>
+                </div>
+
+                <div class="uploaded-file">
+                    <div class="uploaded-file-icon">
+                        <i class="bi bi-file-earmark-music"></i>
+                    </div>
+                    <div class="uploaded-file-info">
+                        <div class="uploaded-file-name">安全为天.mp3</div>
+                        <div class="uploaded-file-meta">3.2 MB</div>
+                    </div>
+                    <button class="uploaded-file-delete" onclick="deleteFile(this)" aria-label="删除文件">
+                        <i class="bi bi-x"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="config-column">
+                <div class="column-header">
+                    <i class="bi bi-hand-index-thumb"></i>
+                    <span class="column-title">宣誓内容配置</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="oathContent">宣誓内容</label>
+                    <textarea class="form-control" id="oathContent" rows="8" aria-label="宣誓内容">我郑重宣誓：
+
+严格遵守安全生产规章制度，
+认真履行安全生产职责，
+坚决杜绝违章操作，
+主动发现和消除安全隐患，
+确保自身和他人生命安全，
+为实现零事故目标而努力奋斗！</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">宣誓语音文件</label>
+                    <div class="file-upload" onclick="document.getElementById('oathFile').click()" role="button" tabindex="0" aria-label="上传宣誓语音文件">
+                        <i class="bi bi-cloud-upload"></i>
+                        <p>点击或拖拽上传宣誓语音文件</p>
+                        <p>支持 MP3、WAV 格式，最大 50MB</p>
+                        <input type="file" id="oathFile" accept=".mp3,.wav" style="display: none;" aria-label="宣誓语音文件输入">
+                    </div>
+                </div>
+            </div>
+
+            <div class="config-column">
+                <div class="column-header">
+                    <i class="bi bi-gear"></i>
+                    <span class="column-title">默认配置</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="defaultMeetingTime">默认会议时间</label>
+                    <input type="text" class="form-control" id="defaultMeetingTime" value="08:00 - 08:30" aria-label="默认会议时间">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="defaultLocation">默认会议地点</label>
+                    <input type="text" class="form-control" id="defaultLocation" value="调度会议室" aria-label="默认会议地点">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="autoRemind">自动提醒</label>
+                    <select class="form-control" id="autoRemind" aria-label="自动提醒">
+                        <option value="0">关闭</option>
+                        <option value="5">提前5分钟</option>
+                        <option value="10" selected>提前10分钟</option>
+                        <option value="15">提前15分钟</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="autoSave">自动保存</label>
+                    <select class="form-control" id="autoSave" aria-label="自动保存">
+                        <option value="0">关闭</option>
+                        <option value="1" selected>开启</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-outline" onclick="goToPage('01-主界面')">
+                <i class="bi bi-arrow-left"></i>
+                返回
+            </button>
+            <button class="btn-primary" onclick="saveConfig()">
+                <i class="bi bi-save"></i>
+                保存配置
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function deleteFile(btn) {
+            const fileItem = btn.closest('.uploaded-file');
+            fileItem.remove();
+        }
+
+        function saveConfig() {
+            alert('配置已保存！');
+        }
+
+        function goToPage(pageName) {
+            window.location.href = pageName + '.html';
+        }
+    </script>
+</body>
+</html>
