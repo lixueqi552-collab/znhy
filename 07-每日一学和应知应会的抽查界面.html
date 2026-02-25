@@ -1,0 +1,713 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日一学和应知应会的抽查 - XX选煤班组安全平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #2563EB;
+            --primary-light: #3B82F6;
+            --primary-dark: #1E40AF;
+            --cta-color: #F97316;
+            --cta-hover: #EA580C;
+            --bg-color: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-color: #1E293B;
+            --text-secondary: #64748B;
+            --border-color: #E2E8F0;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Open Sans', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        .navbar {
+            background-color: var(--card-bg);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 0 32px;
+            height: 64px;
+            flex-shrink: 0;
+        }
+
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .navbar-brand i {
+            font-size: 24px;
+        }
+
+        .navbar-nav {
+            gap: 8px;
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .main-content {
+            padding: 24px 32px;
+            height: calc(100vh - 64px);
+            overflow: hidden;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-color);
+        }
+
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            height: calc(100% - 100px);
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-value.primary {
+            color: var(--primary-color);
+        }
+
+        .stat-value.success {
+            color: var(--success-color);
+        }
+
+        .stat-value.warning {
+            color: var(--warning-color);
+        }
+
+        .stat-value.danger {
+            color: var(--danger-color);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .quiz-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .question-display {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .question-number {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .question-type {
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .question-content {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .answerer-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: var(--bg-color);
+            border-radius: 8px;
+        }
+
+        .answerer-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .answerer-details {
+            flex: 1;
+        }
+
+        .answerer-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .answerer-role {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .answerer-select {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+        }
+
+        .answer-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .answer-option {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .answer-option:hover {
+            border-color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .answer-option.selected {
+            border-color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .answer-option.correct {
+            border-color: var(--success-color);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .answer-option.incorrect {
+            border-color: var(--danger-color);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .option-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .option-content {
+            font-size: 14px;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-primary:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+
+        .btn-outline:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        .btn-warning:hover {
+            background: #D97706;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-warning:focus-visible {
+            outline: 2px solid var(--warning-color);
+            outline-offset: 2px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 16px;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn-primary, .btn-outline, .btn-warning {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="01-主界面.html">
+                <i class="bi bi-shield-check"></i>
+                <span>XX选煤班组安全平台</span>
+            </a>
+            <div class="navbar-nav">
+                <a class="nav-link active" href="#">班前会</a>
+                <a class="nav-link" href="#">班后会</a>
+                <a class="nav-link" href="#">学习会</a>
+            </div>
+            <div class="user-info">
+                <img src="https://via.placeholder.com/36" alt="张班长的头像" class="user-avatar">
+                <span class="user-name">张班长</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <h1 class="page-title">每日一学和应知应会的抽查</h1>
+
+        <div class="quiz-grid">
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-value primary" id="totalQuestions">5</div>
+                    <div class="stat-label">总题目数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value success" id="answeredCount">0</div>
+                    <div class="stat-label">已回答</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value warning" id="correctCount">0</div>
+                    <div class="stat-label">正确数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value danger" id="wrongCount">0</div>
+                    <div class="stat-label">错误数</div>
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="question-display">
+                    <div class="question-header">
+                        <span class="question-number">第 <span id="currentQuestionNum">1</span> 题</span>
+                        <span class="question-type">单选题</span>
+                    </div>
+                    <div class="question-content" id="questionContent">
+                        在进行皮带机检修作业时，必须严格执行什么制度？
+                    </div>
+
+                    <div class="answerer-info">
+                        <img src="https://via.placeholder.com/48" alt="赵维修工的头像" class="answerer-avatar" id="answererAvatar">
+                        <div class="answerer-details">
+                            <div class="answerer-name" id="answererName">赵维修工</div>
+                            <div class="answerer-role" id="answererRole">维修工</div>
+                        </div>
+                        <div class="answerer-select">
+                            <i class="bi bi-shuffle"></i>
+                            <span>随机抽人</span>
+                        </div>
+                    </div>
+
+                    <div class="answer-options" id="answerOptions">
+                        <div class="answer-option" onclick="selectAnswer(this, 0)">
+                            <span class="option-label">A.</span>
+                            <span class="option-content">停机断电挂牌制度</span>
+                        </div>
+                        <div class="answer-option" onclick="selectAnswer(this, 1)">
+                            <span class="option-label">B.</span>
+                            <span class="option-content">安全交底制度</span>
+                        </div>
+                        <div class="answer-option" onclick="selectAnswer(this, 2)">
+                            <span class="option-label">C.</span>
+                            <span class="option-content">班前会制度</span>
+                        </div>
+                        <div class="answer-option" onclick="selectAnswer(this, 3)">
+                            <span class="option-label">D.</span>
+                            <span class="option-content">安全检查制度</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-buttons">
+                    <button class="btn-warning" onclick="skipQuestion()" id="skipBtn">
+                        <i class="bi bi-skip-forward"></i>
+                        跳过
+                    </button>
+                    <button class="btn-primary" onclick="submitAnswer()" id="submitBtn" disabled>
+                        <i class="bi bi-check-lg"></i>
+                        提交答案
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-outline" onclick="goToPage('06-工作安排和现场风险研判界面')">
+                <i class="bi bi-arrow-left"></i>
+                返回
+            </button>
+            <button class="btn-primary" onclick="goToPage('08-安全宣誓界面')">
+                下一步
+                <i class="bi bi-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentQuestionIndex = 0;
+        let selectedAnswer = null;
+        let answeredCount = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+
+        const questions = [
+            {
+                question: '在进行皮带机检修作业时，必须严格执行什么制度？',
+                options: ['停机断电挂牌制度', '安全交底制度', '班前会制度', '安全检查制度'],
+                correct: 0
+            },
+            {
+                question: '高处作业时，必须佩戴什么防护用品？',
+                options: ['安全帽', '安全带', '防护眼镜', '防护手套'],
+                correct: 1
+            },
+            {
+                question: '在进行电气设备检修时，必须先做什么？',
+                options: ['穿戴防护用品', '通知相关人员', '断电验电', '填写检修记录'],
+                correct: 2
+            },
+            {
+                question: '发现有人触电时，应该首先做什么？',
+                options: ['立即进行人工呼吸', '立即切断电源', '立即拨打120', '立即进行心肺复苏'],
+                correct: 1
+            },
+            {
+                question: '班前会的主要目的是什么？',
+                options: ['安排工作任务', '强调安全注意事项', '以上都是', '以上都不是'],
+                correct: 2
+            }
+        ];
+
+        const answerers = [
+            { name: '赵维修工', role: '维修工' },
+            { name: '孙维修工', role: '维修工' },
+            { name: '周维修工', role: '维修工' },
+            { name: '吴操作工', role: '操作工' },
+            { name: '郑操作工', role: '操作工' }
+        ];
+
+        function selectAnswer(option, index) {
+            const options = document.querySelectorAll('.answer-option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            selectedAnswer = index;
+            document.getElementById('submitBtn').disabled = false;
+        }
+
+        function submitAnswer() {
+            if (selectedAnswer === null) return;
+
+            const options = document.querySelectorAll('.answer-option');
+            const currentQuestion = questions[currentQuestionIndex];
+
+            if (selectedAnswer === currentQuestion.correct) {
+                options[selectedAnswer].classList.add('correct');
+                options[selectedAnswer].classList.remove('selected');
+                correctCount++;
+            } else {
+                options[selectedAnswer].classList.add('incorrect');
+                options[selectedAnswer].classList.remove('selected');
+                options[currentQuestion.correct].classList.add('correct');
+                wrongCount++;
+            }
+
+            answeredCount++;
+            updateStats();
+
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('skipBtn').disabled = true;
+
+            setTimeout(() => {
+                nextQuestion();
+            }, 1500);
+        }
+
+        function skipQuestion() {
+            currentQuestionIndex++;
+            answeredCount++;
+            updateStats();
+
+            if (currentQuestionIndex >= questions.length) {
+                alert('所有题目已完成！');
+                return;
+            }
+
+            loadQuestion();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex >= questions.length) {
+                alert('所有题目已完成！');
+                document.getElementById('submitBtn').disabled = true;
+                document.getElementById('skipBtn').disabled = true;
+                return;
+            }
+
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            selectedAnswer = null;
+            const currentQuestion = questions[currentQuestionIndex];
+            const randomAnswerer = answerers[Math.floor(Math.random() * answerers.length)];
+
+            document.getElementById('currentQuestionNum').textContent = currentQuestionIndex + 1;
+            document.getElementById('questionContent').textContent = currentQuestion.question;
+            document.getElementById('answererName').textContent = randomAnswerer.name;
+            document.getElementById('answererRole').textContent = randomAnswerer.role;
+
+            const optionsContainer = document.getElementById('answerOptions');
+            optionsContainer.innerHTML = '';
+
+            currentQuestion.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'answer-option';
+                optionDiv.innerHTML = `
+                    <span class="option-label">${String.fromCharCode(65 + index)}.</span>
+                    <span class="option-content">${option}</span>
+                `;
+                optionDiv.onclick = function() { selectAnswer(this, index); };
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('skipBtn').disabled = false;
+        }
+
+        function updateStats() {
+            document.getElementById('answeredCount').textContent = answeredCount;
+            document.getElementById('correctCount').textContent = correctCount;
+            document.getElementById('wrongCount').textContent = wrongCount;
+        }
+
+        function goToPage(pageName) {
+            window.location.href = pageName + '.html';
+        }
+    </script>
+</body>
+</html>
