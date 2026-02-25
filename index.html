@@ -1,0 +1,748 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>班前会准备 - XX选煤班组安全平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #2563EB;
+            --primary-light: #3B82F6;
+            --primary-dark: #1E40AF;
+            --cta-color: #F97316;
+            --cta-hover: #EA580C;
+            --bg-color: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-color: #1E293B;
+            --text-secondary: #64748B;
+            --border-color: #E2E8F0;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+            --ai-primary: #8B5CF6;
+            --ai-secondary: #6366F1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Open Sans', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        /* 顶部导航栏 */
+        .navbar {
+            background-color: var(--card-bg);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 0 32px;
+            height: 64px;
+            flex-shrink: 0;
+        }
+
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .navbar-brand i {
+            font-size: 24px;
+        }
+
+        .navbar-nav {
+            gap: 8px;
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* 主内容区 */
+        .main-content {
+            padding: 24px 32px;
+            height: calc(100vh - 64px);
+            overflow: hidden;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-color);
+        }
+
+        /* 三栏布局 */
+        .preparation-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            height: calc(100% - 80px);
+        }
+
+        .preparation-column {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .column-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .column-header i {
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        .column-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        /* 表单元素 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-color);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-control {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 14px;
+            transition: all 0.2s;
+            background-color: var(--bg-color);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-control:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        textarea.form-control {
+            resize: none;
+            min-height: 100px;
+        }
+
+        /* AI按钮样式 */
+        .btn-ai {
+            background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+            cursor: pointer;
+        }
+
+        .btn-ai:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-ai:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* AI加载动画 */
+        .ai-loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ai-loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 新增学习内容按钮 */
+        .btn-add-content {
+            background: var(--cta-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .btn-add-content:hover {
+            background: var(--cta-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+        }
+
+        /* 学习内容项 */
+        .learning-content-item {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .learning-content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .learning-content-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .btn-delete {
+            background: transparent;
+            border: none;
+            color: var(--danger-color);
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-delete:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* 新增学习内容表单 */
+        .new-content-form {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: none;
+        }
+
+        .new-content-form.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 500px;
+            }
+        }
+
+        /* 底部按钮区域 */
+        .footer-actions {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            padding: 16px 32px;
+            box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .btn-finish {
+            background: var(--cta-color);
+            color: white;
+            border: none;
+            padding: 14px 48px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        .btn-finish:hover {
+            background: var(--cta-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(249, 115, 22, 0.4);
+        }
+
+        .btn-finish:focus-visible {
+            outline: 2px solid var(--cta-color);
+            outline-offset: 2px;
+        }
+
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .preparation-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 16px;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+
+            .preparation-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-actions {
+                padding: 12px 16px;
+            }
+
+            .btn-finish {
+                padding: 12px 32px;
+                font-size: 15px;
+            }
+        }
+
+        /* 减少动画偏好 */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="01-主界面.html">
+                <i class="bi bi-shield-check"></i>
+                <span>XX选煤班组安全平台</span>
+            </a>
+            <div class="navbar-nav">
+                <a class="nav-link active" href="#">班前会</a>
+                <a class="nav-link" href="#">班后会</a>
+                <a class="nav-link" href="#">学习会</a>
+            </div>
+            <div class="user-info">
+                <img src="https://via.placeholder.com/36" alt="张班长的头像" class="user-avatar">
+                <span class="user-name">张班长</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <h1 class="page-title">班前会准备</h1>
+
+        <!-- 三栏布局 -->
+        <div class="preparation-grid">
+            <!-- 第一栏：上一班工作交接信息 -->
+            <div class="preparation-column">
+                <div class="column-header">
+                    <i class="bi bi-arrow-repeat"></i>
+                    <span class="column-title">上一班工作交接</span>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="previous-shift-info">上一班工作交接信息</label>
+                    <textarea class="form-control" id="previous-shift-info" placeholder="请输入上一班工作交接信息...">2026年1月15日中班工作完成情况：
+1. 1号皮带机检修已完成，运行正常
+2. 2号破碎机需要更换轴承，已安排明班处理
+3. 3号筛分机发现异响，需进一步检查
+4. 所有安全检查项目已完成，无隐患</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="hazard-list">未整改隐患列表</label>
+                    <textarea class="form-control" id="hazard-list" placeholder="请输入未整改隐患列表...">1. 2号破碎机轴承异响 - 责任人：李维修工 - 完成时限：2026年1月16日
+2. 3号筛分机异响 - 责任人：王技术员 - 完成时限：2026年1月16日</textarea>
+                </div>
+            </div>
+
+            <!-- 第二栏：工作信息安排和学习内容准备 -->
+            <div class="preparation-column">
+                <div class="column-header">
+                    <i class="bi bi-clipboard-data"></i>
+                    <span class="column-title">工作信息安排</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="task-description">工作任务描述</label>
+                    <textarea class="form-control" id="task-description" placeholder="请输入工作任务描述...">本班次主要工作任务：
+1. 完成2号破碎机轴承更换
+2. 检查3号筛分机异响原因
+3. 日常设备巡检和维护
+4. 清理作业现场</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">AI智能分析</label>
+                    <button class="btn-ai" onclick="analyzeTask()">
+                        <i class="bi bi-stars"></i>
+                        AI分析
+                    </button>
+                    <div id="ai-loading" class="ai-loading" style="display: none; margin-top: 8px;">
+                        <i class="bi bi-cpu"></i>
+                        <span>AI分析中...</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="risk-points">风险点</label>
+                    <textarea class="form-control" id="risk-points" placeholder="AI将自动生成风险点..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="control-measures">防范措施</label>
+                    <textarea class="form-control" id="control-measures" placeholder="AI将自动生成防范措施..."></textarea>
+                </div>
+
+                <div style="margin-top: auto;">
+                    <label class="form-label">学习内容准备</label>
+                    <button class="btn-add-content" onclick="toggleNewContentForm()">
+                        <i class="bi bi-plus-circle"></i>
+                        新增学习内容
+                    </button>
+                    
+                    <div id="new-content-form" class="new-content-form">
+                        <div class="form-group">
+                            <label class="form-label" for="content-title">内容标题</label>
+                            <input type="text" class="form-control" id="content-title" placeholder="请输入内容标题">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="content-type">内容类型</label>
+                            <select class="form-control" id="content-type">
+                                <option value="file">文件</option>
+                                <option value="video">视频</option>
+                                <option value="image">图片</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="content-file">上传文件</label>
+                            <input type="file" class="form-control" id="content-file">
+                        </div>
+                        <div style="display: flex; gap: 8px; margin-top: 12px;">
+                            <button class="btn-ai" onclick="addContent()">
+                                <i class="bi bi-check-circle"></i>
+                                确认添加
+                            </button>
+                            <button class="btn-add-content" style="background-color: var(--text-secondary);" onclick="toggleNewContentForm()">
+                                <i class="bi bi-x-circle"></i>
+                                取消
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="learning-content-list">
+                        <!-- 学习内容项将在这里动态添加 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第三栏：各环节内容准备 -->
+            <div class="preparation-column">
+                <div class="column-header">
+                    <i class="bi bi-list-check"></i>
+                    <span class="column-title">各环节内容准备</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="meeting-theme">会议主题</label>
+                    <input type="text" class="form-control" id="meeting-theme" placeholder="请输入会议主题" value="2026年1月16日班前会">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="meeting-notes">会议备注</label>
+                    <textarea class="form-control" id="meeting-notes" placeholder="请输入会议备注..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">准备状态</label>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="status-badge" style="background: rgba(245, 158, 11, 0.1); color: var(--warning-color); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+                            准备中
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部按钮区域 -->
+    <div class="footer-actions">
+        <button class="btn-finish" onclick="finishPreparation()">
+            <i class="bi bi-check-circle"></i>
+            班前会准备结束
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // AI分析功能
+        function analyzeTask() {
+            const taskDescription = document.getElementById('task-description').value;
+            if (!taskDescription.trim()) {
+                alert('请先输入工作任务描述');
+                return;
+            }
+
+            // 显示加载动画
+            document.getElementById('ai-loading').style.display = 'inline-flex';
+
+            // 模拟AI分析（1.5秒延迟）
+            setTimeout(() => {
+                // 根据任务描述生成风险点和防范措施
+                const riskPoints = generateRiskPoints(taskDescription);
+                const controlMeasures = generateControlMeasures(taskDescription);
+
+                // 填充到输入框
+                document.getElementById('risk-points').value = riskPoints;
+                document.getElementById('control-measures').value = controlMeasures;
+
+                // 隐藏加载动画
+                document.getElementById('ai-loading').style.display = 'none';
+
+                // 显示成功提示
+                alert('AI分析完成！');
+            }, 1500);
+        }
+
+        // 生成风险点（模拟）
+        function generateRiskPoints(task) {
+            const keywords = {
+                '轴承': '机械伤害风险、触电风险',
+                '破碎机': '机械伤害风险、卷入风险',
+                '筛分机': '机械伤害风险、粉尘爆炸风险',
+                '皮带机': '机械伤害风险、卷入风险',
+                '照明': '触电风险、高处作业风险',
+                '高处': '高处坠落风险、物体打击风险',
+                '检修': '设备启动风险、能量释放风险',
+                '维护': '设备启动风险、工具伤害风险'
+            };
+
+            let riskPoints = [];
+            for (const keyword in keywords) {
+                if (task.includes(keyword)) {
+                    riskPoints.push(keywords[keyword]);
+                }
+            }
+
+            if (riskPoints.length === 0) {
+                riskPoints.push('需要根据具体作业内容识别风险点');
+            }
+
+            return riskPoints.join('\n');
+        }
+
+        // 生成防范措施（模拟）
+        function generateControlMeasures(task) {
+            const measures = {
+                '轴承': '断电挂牌上锁、穿戴绝缘防护用品、使用专用工具',
+                '破碎机': '停机作业、专人监护、设置警示标识、使用安全锁具',
+                '筛分机': '停机作业、佩戴防尘口罩、检查防护装置、设置安全网',
+                '皮带机': '停机作业、专人监护、设置警示标识、使用急停按钮',
+                '照明': '断电验电、穿戴绝缘手套、使用绝缘工具、设置安全护栏',
+                '高处': '佩戴安全带、设置安全网、专人监护、清理作业现场',
+                '检修': '执行挂牌上锁制度、确认设备能量隔离、使用专用工具',
+                '维护': '执行挂牌上锁制度、确认设备能量隔离、穿戴防护用品'
+            };
+
+            let controlMeasures = [];
+            for (const keyword in measures) {
+                if (task.includes(keyword)) {
+                    controlMeasures.push(measures[keyword]);
+                }
+            }
+
+            if (controlMeasures.length === 0) {
+                controlMeasures.push('需要根据具体作业内容制定防范措施');
+            }
+
+            return controlMeasures.join('\n');
+        }
+
+        // 切换新增学习内容表单
+        function toggleNewContentForm() {
+            const form = document.getElementById('new-content-form');
+            form.classList.toggle('show');
+        }
+
+        // 添加学习内容
+        let contentCount = 0;
+        function addContent() {
+            const title = document.getElementById('content-title').value;
+            const type = document.getElementById('content-type').value;
+            const file = document.getElementById('content-file').value;
+
+            if (!title.trim()) {
+                alert('请输入内容标题');
+                return;
+            }
+
+            if (!file) {
+                alert('请上传文件');
+                return;
+            }
+
+            contentCount++;
+            
+            // 创建学习内容项
+            const contentItem = document.createElement('div');
+            contentItem.className = 'learning-content-item';
+            contentItem.id = 'content-' + contentCount;
+            contentItem.innerHTML = `
+                <div class="learning-content-header">
+                    <span class="learning-content-title">${contentCount}. ${title}</span>
+                    <button class="btn-delete" onclick="deleteContent(${contentCount})" aria-label="删除学习内容">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+                <div style="font-size: 13px; color: var(--text-secondary);">
+                    类型：${type === 'file' ? '文件' : type === 'video' ? '视频' : '图片'}
+                </div>
+            `;
+
+            // 添加到列表
+            document.getElementById('learning-content-list').appendChild(contentItem);
+
+            // 清空表单
+            document.getElementById('content-title').value = '';
+            document.getElementById('content-type').value = 'file';
+            document.getElementById('content-file').value = '';
+
+            // 隐藏表单
+            toggleNewContentForm();
+        }
+
+        // 删除学习内容
+        function deleteContent(id) {
+            const contentItem = document.getElementById('content-' + id);
+            if (contentItem) {
+                contentItem.remove();
+            }
+        }
+
+        // 完成准备
+        function finishPreparation() {
+            alert('班前会准备完成！现在可以开始班前会了。');
+            window.location.href = '01-主界面.html';
+        }
+    </script>
+</body>
+</html>
