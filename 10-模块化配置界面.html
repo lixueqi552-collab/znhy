@@ -1,0 +1,756 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模块化配置 - XX选煤班组安全平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #2563EB;
+            --primary-light: #3B82F6;
+            --primary-dark: #1E40AF;
+            --cta-color: #F97316;
+            --cta-hover: #EA580C;
+            --bg-color: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-color: #1E293B;
+            --text-secondary: #64748B;
+            --border-color: #E2E8F0;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Open Sans', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        .navbar {
+            background-color: var(--card-bg);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 0 32px;
+            height: 64px;
+            flex-shrink: 0;
+        }
+
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .navbar-brand i {
+            font-size: 24px;
+        }
+
+        .navbar-nav {
+            gap: 8px;
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .main-content {
+            padding: 24px 32px;
+            height: calc(100vh - 64px);
+            overflow: hidden;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-color);
+        }
+
+        .module-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            height: calc(100% - 100px);
+        }
+
+        .module-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .card-header i {
+            color: var(--primary-color);
+        }
+
+        .module-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .module-item {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            cursor: grab;
+            transition: all 0.2s;
+        }
+
+        .module-item:hover {
+            border-color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .module-item.selected {
+            border-color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .module-item-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .module-item-title {
+            font-weight: 600;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .module-item-type {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .module-item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .module-item-actions i {
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .module-item-actions i:hover {
+            color: var(--primary-color);
+        }
+
+        .module-item-actions i:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .selected-modules {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            height: calc(100% - 100px);
+            overflow-y: auto;
+        }
+
+        .selected-modules-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .selected-modules-title {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .selected-modules-count {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .selected-modules-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .selected-module-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: grab;
+            transition: all 0.2s;
+        }
+
+        .selected-module-item:hover {
+            border-color: var(--primary-color);
+        }
+
+        .selected-module-item:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .selected-module-item i {
+            cursor: grab;
+            color: var(--text-secondary);
+        }
+
+        .selected-module-item i:hover {
+            color: var(--primary-color);
+        }
+
+        .selected-module-item span {
+            flex: 1;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .selected-module-item .btn-delete {
+            background: transparent;
+            border: none;
+            color: var(--danger-color);
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .selected-module-item .btn-delete:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .selected-module-item .btn-delete:focus-visible {
+            outline: 2px solid var(--danger-color);
+            outline-offset: 2px;
+        }
+
+        .preset-templates {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .preset-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .preset-item {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px 16px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset-item:hover {
+            border-color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .preset-item:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+
+        .btn-outline:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 16px;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .module-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn-primary, .btn-outline {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="01-主界面.html">
+                <i class="bi bi-shield-check"></i>
+                <span>XX选煤班组安全平台</span>
+            </a>
+            <div class="navbar-nav">
+                <a class="nav-link active" href="#">班前会</a>
+                <a class="nav-link" href="#">班后会</a>
+                <a class="nav-link" href="#">学习会</a>
+            </div>
+            <div class="user-info">
+                <img src="https://via.placeholder.com/36" alt="张班长的头像" class="user-avatar">
+                <span class="user-name">张班长</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <h1 class="page-title">模块化配置</h1>
+
+        <div class="module-grid">
+            <div class="module-card">
+                <div class="card-header">
+                    <i class="bi bi-grid"></i>
+                    <span>可用模块</span>
+                </div>
+
+                <div class="module-list">
+                    <div class="module-item" onclick="selectModule('meeting-prep')">
+                        <div class="module-item-header">
+                            <span class="module-item-title">班前会准备</span>
+                            <span class="module-item-type">准备环节</span>
+                        </div>
+                        <div class="module-item-actions">
+                            <i class="bi bi-plus-circle" title="添加"></i>
+                        </div>
+                    </div>
+
+                    <div class="module-item" onclick="selectModule('sign-in')">
+                        <div class="module-item-header">
+                            <span class="module-item-title">点名及确认安全</span>
+                            <span class="module-item-type">签到环节</span>
+                        </div>
+                        <div class="module-item-actions">
+                            <i class="bi bi-plus-circle" title="添加"></i>
+                        </div>
+                    </div>
+
+                    <div class="module-item" onclick="selectModule('sing-song')">
+                        <div class="module-item-header">
+                            <span class="module-item-title">集体唱班歌</span>
+                            <span class="module-item-type">活动环节</span>
+                        </div>
+                        <div class="module-item-actions">
+                            <i class="bi bi-plus-circle" title="添加"></i>
+                        </div>
+                    </div>
+
+                    <div class="module-item" onclick="selectModule('file-study')">
+                        <div class="module-item-header">
+                            <span class="module-item-title">传达会议精神与文件学习</span>
+                            <span class="module-item-type">学习环节</span>
+                        </div>
+                        <div class="module-item-actions">
+                            <i class="bi bi-plus-circle" title="添加"></i>
+                        </div>
+                    </div>
+
+                    <div class="module-item" onclick="selectModule('case-study')">
+                        <div class="module-item-header">
+                            <span class="module-item-title">事故案例学习</span>
+                            <span class="module-item-type">学习环节</span>
+                        </div>
+                        <div class="module-item-actions">
+                            <i class="bi bi-plus-circle" title="添加"></i>
+                        </div>
+                    </div>
+
+                    <div class="module-item" onclick="selectModule('work-arrangement')">
+                        <div class="module-item-header">
+                            <span class="module-item-title">工作安排和现场风险研判</span>
+                            <span class="module-item-type">安排环节</span>
+                        </div>
+                        <div class="module-item-actions">
+                            <i class="bi bi-plus-circle" title="添加"></i>
+                        </div>
+                    </div>
+
+                    <div class="module-item" onclick="selectModule('daily-quiz')">
+                        <div class="module-item-header">
+                            <span class="module-item-title">每日一学和应知应会的抽查</span>
+                            <span class="module-item-type">考核环节</span>
+                        </div>
+                        <div class="module-item-actions">
+                            <i class="bi bi-plus-circle" title="添加"></i>
+                        </div>
+                    </div>
+
+                    <div class="module-item" onclick="selectModule('oath')">
+                        <div class="module-item-header">
+                            <span class="module-item-title">安全宣誓</span>
+                            <span class="module-item-type">宣誓环节</span>
+                        </div>
+                        <div class="module-item-actions">
+                            <i class="bi bi-plus-circle" title="添加"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="module-card">
+                <div class="card-header">
+                    <i class="bi bi-check2-square"></i>
+                    <span>已选模块</span>
+                </div>
+
+                <div class="selected-modules">
+                    <div class="selected-modules-header">
+                        <span class="selected-modules-title">班前会流程</span>
+                        <span class="selected-modules-count">已选 8 个模块</span>
+                    </div>
+
+                    <div class="selected-modules-list" id="selectedModulesList">
+                        <div class="selected-module-item">
+                            <i class="bi bi-grip-vertical"></i>
+                            <span>班前会准备</span>
+                            <button class="btn-delete" onclick="removeModule(this)" aria-label="删除模块">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+
+                        <div class="selected-module-item">
+                            <i class="bi bi-grip-vertical"></i>
+                            <span>点名及确认安全</span>
+                            <button class="btn-delete" onclick="removeModule(this)" aria-label="删除模块">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+
+                        <div class="selected-module-item">
+                            <i class="bi bi-grip-vertical"></i>
+                            <span>集体唱班歌</span>
+                            <button class="btn-delete" onclick="removeModule(this)" aria-label="删除模块">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+
+                        <div class="selected-module-item">
+                            <i class="bi bi-grip-vertical"></i>
+                            <span>传达会议精神与文件学习</span>
+                            <button class="btn-delete" onclick="removeModule(this)" aria-label="删除模块">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+
+                        <div class="selected-module-item">
+                            <i class="bi bi-grip-vertical"></i>
+                            <span>事故案例学习</span>
+                            <button class="btn-delete" onclick="removeModule(this)" aria-label="删除模块">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+
+                        <div class="selected-module-item">
+                            <i class="bi bi-grip-vertical"></i>
+                            <span>工作安排和现场风险研判</span>
+                            <button class="btn-delete" onclick="removeModule(this)" aria-label="删除模块">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+
+                        <div class="selected-module-item">
+                            <i class="bi bi-grip-vertical"></i>
+                            <span>每日一学和应知应会的抽查</span>
+                            <button class="btn-delete" onclick="removeModule(this)" aria-label="删除模块">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+
+                        <div class="selected-module-item">
+                            <i class="bi bi-grip-vertical"></i>
+                            <span>安全宣誓</span>
+                            <button class="btn-delete" onclick="removeModule(this)" aria-label="删除模块">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="preset-templates">
+                        <div class="preset-title">预设流程</div>
+                        <div class="preset-item" onclick="applyPreset('standard')">
+                            <i class="bi bi-play-circle"></i>
+                            标准班前会流程
+                        </div>
+                        <div class="preset-item" onclick="applyPreset('simplified')">
+                            <i class="bi bi-play-circle"></i>
+                            简化班前会流程
+                        </div>
+                        <div class="preset-item" onclick="applyPreset('comprehensive')">
+                            <i class="bi bi-play-circle"></i>
+                            全面班前会流程
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-outline" onclick="goToPage('01-主界面')">
+                <i class="bi bi-arrow-left"></i>
+                返回
+            </button>
+            <button class="btn-primary" onclick="saveModules()">
+                <i class="bi bi-save"></i>
+                保存配置
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const modules = {
+            'meeting-prep': '班前会准备',
+            'sign-in': '点名及确认安全',
+            'sing-song': '集体唱班歌',
+            'file-study': '传达会议精神与文件学习',
+            'case-study': '事故案例学习',
+            'work-arrangement': '工作安排和现场风险研判',
+            'daily-quiz': '每日一学和应知应会的抽查',
+            'oath': '安全宣誓'
+        };
+
+        const presets = {
+            'standard': ['meeting-prep', 'sign-in', 'sing-song', 'file-study', 'work-arrangement', 'daily-quiz', 'oath'],
+            'simplified': ['sign-in', 'work-arrangement', 'oath'],
+            'comprehensive': ['meeting-prep', 'sign-in', 'sing-song', 'file-study', 'case-study', 'work-arrangement', 'daily-quiz', 'oath']
+        };
+
+        function selectModule(moduleId) {
+            const moduleName = modules[moduleId];
+            const selectedList = document.getElementById('selectedModulesList');
+            
+            const newItem = document.createElement('div');
+            newItem.className = 'selected-module-item';
+            newItem.innerHTML = `
+                <i class="bi bi-grip-vertical"></i>
+                <span>${moduleName}</span>
+                <button class="btn-delete" onclick="removeModule(this)" aria-label="删除模块">
+                    <i class="bi bi-x"></i>
+                </button>
+            `;
+            
+            selectedList.appendChild(newItem);
+            updateModuleCount();
+        }
+
+        function removeModule(btn) {
+            const moduleItem = btn.closest('.selected-module-item');
+            moduleItem.remove();
+            updateModuleCount();
+        }
+
+        function updateModuleCount() {
+            const selectedList = document.getElementById('selectedModulesList');
+            const count = selectedList.children.length;
+            document.querySelector('.selected-modules-count').textContent = `已选 ${count} 个模块`;
+        }
+
+        function applyPreset(presetId) {
+            const selectedList = document.getElementById('selectedModulesList');
+            selectedList.innerHTML = '';
+            
+            const moduleIds = presets[presetId];
+            moduleIds.forEach(moduleId => {
+                const moduleName = modules[moduleId];
+                const newItem = document.createElement('div');
+                newItem.className = 'selected-module-item';
+                newItem.innerHTML = `
+                    <i class="bi bi-grip-vertical"></i>
+                    <span>${moduleName}</span>
+                    <button class="btn-delete" onclick="removeModule(this)" aria-label="删除模块">
+                        <i class="bi bi-x"></i>
+                    </button>
+                `;
+                selectedList.appendChild(newItem);
+            });
+            
+            updateModuleCount();
+        }
+
+        function saveModules() {
+            alert('模块配置已保存！');
+        }
+
+        function goToPage(pageName) {
+            window.location.href = pageName + '.html';
+        }
+    </script>
+</body>
+</html>
