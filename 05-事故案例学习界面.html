@@ -1,0 +1,783 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事故案例学习 - XX选煤班组安全平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #2563EB;
+            --primary-light: #3B82F6;
+            --primary-dark: #1E40AF;
+            --cta-color: #F97316;
+            --cta-hover: #EA580C;
+            --bg-color: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-color: #1E293B;
+            --text-secondary: #64748B;
+            --border-color: #E2E8F0;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Open Sans', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        .navbar {
+            background-color: var(--card-bg);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 0 32px;
+            height: 64px;
+            flex-shrink: 0;
+        }
+
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .navbar-brand i {
+            font-size: 24px;
+        }
+
+        .navbar-nav {
+            gap: 8px;
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .main-content {
+            padding: 24px 32px;
+            height: calc(100vh - 64px);
+            overflow: hidden;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-color);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 24px;
+            height: calc(100% - 100px);
+        }
+
+        .sidebar-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .sidebar-header i {
+            color: var(--danger-color);
+        }
+
+        .content-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .content-item {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .content-item:hover {
+            border-color: var(--danger-color);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .content-item.active {
+            border-color: var(--danger-color);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .content-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 8px;
+        }
+
+        .content-item-title {
+            font-weight: 600;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .content-item-level {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+            font-weight: 600;
+            margin-left: 8px;
+            flex-shrink: 0;
+        }
+
+        .content-item-meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .content-item-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .content-item-status.completed {
+            color: var(--success-color);
+        }
+
+        .content-item-status.pending {
+            color: var(--warning-color);
+        }
+
+        .main-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .main-header i {
+            color: var(--danger-color);
+        }
+
+        .content-detail {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: var(--bg-color);
+            border-radius: 8px;
+        }
+
+        .content-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .content-placeholder i {
+            font-size: 64px;
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+            opacity: 0.3;
+        }
+
+        .content-placeholder p {
+            font-size: 16px;
+        }
+
+        .content-view {
+            display: none;
+        }
+
+        .content-view.active {
+            display: block;
+        }
+
+        .content-view-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .content-view-meta {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .content-view-meta-item {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .content-view-meta-item i {
+            margin-right: 6px;
+        }
+
+        .content-view-body {
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--text-color);
+        }
+
+        .content-view-body p {
+            margin-bottom: 16px;
+        }
+
+        .content-view-body h3 {
+            font-size: 18px;
+            margin: 24px 0 12px 0;
+            color: var(--danger-color);
+        }
+
+        .content-view-body ul {
+            margin-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        .content-view-body li {
+            margin-bottom: 8px;
+        }
+
+        .study-timer {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-family: 'Poppins', sans-serif;
+            margin: 20px 0;
+            padding: 16px;
+            background: var(--bg-color);
+            border-radius: 8px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-primary:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+
+        .btn-outline:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        @media (max-width: 1200px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar-card {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 16px;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn-primary, .btn-outline {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="01-主界面.html">
+                <i class="bi bi-shield-check"></i>
+                <span>XX选煤班组安全平台</span>
+            </a>
+            <div class="navbar-nav">
+                <a class="nav-link active" href="#">班前会</a>
+                <a class="nav-link" href="#">班后会</a>
+                <a class="nav-link" href="#">学习会</a>
+            </div>
+            <div class="user-info">
+                <img src="https://via.placeholder.com/36" alt="张班长的头像" class="user-avatar">
+                <span class="user-name">张班长</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <h1 class="page-title">事故案例学习</h1>
+
+        <div class="content-grid">
+            <div class="sidebar-card">
+                <div class="sidebar-header">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <span>案例列表</span>
+                </div>
+
+                <div class="content-list">
+                    <div class="content-item active" onclick="selectContent(0)">
+                        <div class="content-item-header">
+                            <span class="content-item-title">皮带机绞伤事故案例分析</span>
+                            <span class="content-item-level">重大</span>
+                        </div>
+                        <div class="content-item-meta">发生时间: 2025-12-15</div>
+                        <div class="content-item-status completed">
+                            <i class="bi bi-check-circle-fill"></i>
+                            已学习
+                        </div>
+                    </div>
+
+                    <div class="content-item" onclick="selectContent(1)">
+                        <div class="content-item-header">
+                            <span class="content-item-title">高处坠落事故案例分析</span>
+                            <span class="content-item-level">较大</span>
+                        </div>
+                        <div class="content-item-meta">发生时间: 2025-11-20</div>
+                        <div class="content-item-status pending">
+                            <i class="bi bi-clock"></i>
+                            待学习
+                        </div>
+                    </div>
+
+                    <div class="content-item" onclick="selectContent(2)">
+                        <div class="content-item-header">
+                            <span class="content-item-title">触电事故案例分析</span>
+                            <span class="content-item-level">一般</span>
+                        </div>
+                        <div class="content-item-meta">发生时间: 2025-10-08</div>
+                        <div class="content-item-status pending">
+                            <i class="bi bi-clock"></i>
+                            待学习
+                        </div>
+                    </div>
+
+                    <div class="content-item" onclick="selectContent(3)">
+                        <div class="content-item-header">
+                            <span class="content-item-title">机械伤害事故案例分析</span>
+                            <span class="content-item-level">较大</span>
+                        </div>
+                        <div class="content-item-meta">发生时间: 2025-09-15</div>
+                        <div class="content-item-status pending">
+                            <i class="bi bi-clock"></i>
+                            待学习
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-card">
+                <div class="main-header">
+                    <i class="bi bi-file-earmark-text"></i>
+                    <span>案例详情</span>
+                </div>
+
+                <div class="content-detail">
+                    <div class="content-placeholder" id="contentPlaceholder">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <p>请从左侧选择要学习的案例</p>
+                    </div>
+
+                    <div class="content-view active" id="contentView">
+                        <div class="content-view-title">皮带机绞伤事故案例分析</div>
+                        
+                        <div class="content-view-meta">
+                            <span class="content-view-meta-item"><i class="bi bi-calendar"></i>2025-12-15</span>
+                            <span class="content-view-meta-item"><i class="bi bi-exclamation-circle"></i>重大事故</span>
+                            <span class="content-view-meta-item"><i class="bi bi-clock"></i>预计学习时间: 8分钟</span>
+                        </div>
+
+                        <div class="study-timer" id="studyTimer">00:00</div>
+
+                        <div class="content-view-body">
+                            <h3>事故经过</h3>
+                            <p>2025年12月15日14时30分，某选煤厂机电维修班在进行皮带机检修作业时，维修工王某在未停机断电的情况下，违规进入皮带机运行区域进行检修，导致手臂被皮带机卷入，造成严重绞伤事故。</p>
+
+                            <h3>事故原因</h3>
+                            <ul>
+                                <li><strong>直接原因：</strong>维修工王某安全意识淡薄，违反操作规程，在设备运行状态下进行检修作业。</li>
+                                <li><strong>间接原因：</strong>班组长未严格执行"停机断电挂牌"制度，现场安全监护不到位。</li>
+                                <li><strong>管理原因：</strong>安全培训教育不到位，员工安全操作规程掌握不牢固。</li>
+                            </ul>
+
+                            <h3>事故教训</h3>
+                            <ul>
+                                <li>严格执行"停机断电挂牌"制度，严禁在设备运行状态下进行检修作业。</li>
+                                <li>加强现场安全监护，确保作业安全。</li>
+                                <li>强化安全培训教育，提高员工安全意识和操作技能。</li>
+                                <li>完善安全管理制度，堵塞管理漏洞。</li>
+                            </ul>
+
+                            <h3>防范措施</h3>
+                            <ul>
+                                <li>严格执行设备检修操作规程，落实"停机断电挂牌"制度。</li>
+                                <li>加强作业现场安全管理，设置安全警示标识。</li>
+                                <li>定期开展安全培训和应急演练，提高员工应急处置能力。</li>
+                                <li>加强安全检查，及时发现和消除安全隐患。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-outline" onclick="goToPage('04-传达会议精神与文件学习界面')">
+                <i class="bi bi-arrow-left"></i>
+                返回
+            </button>
+            <button class="btn-primary" onclick="goToPage('06-工作安排和现场风险研判界面')">
+                下一步
+                <i class="bi bi-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentContentIndex = 0;
+        let studyTime = 0;
+        let timerInterval = null;
+
+        const contents = [
+            {
+                title: '皮带机绞伤事故案例分析',
+                date: '2025-12-15',
+                level: '重大事故',
+                duration: '8分钟',
+                body: `
+                    <h3>事故经过</h3>
+                    <p>2025年12月15日14时30分，某选煤厂机电维修班在进行皮带机检修作业时，维修工王某在未停机断电的情况下，违规进入皮带机运行区域进行检修，导致手臂被皮带机卷入，造成严重绞伤事故。</p>
+                    <h3>事故原因</h3>
+                    <ul>
+                        <li><strong>直接原因：</strong>维修工王某安全意识淡薄，违反操作规程，在设备运行状态下进行检修作业。</li>
+                        <li><strong>间接原因：</strong>班组长未严格执行"停机断电挂牌"制度，现场安全监护不到位。</li>
+                        <li><strong>管理原因：</strong>安全培训教育不到位，员工安全操作规程掌握不牢固。</li>
+                    </ul>
+                    <h3>事故教训</h3>
+                    <ul>
+                        <li>严格执行"停机断电挂牌"制度，严禁在设备运行状态下进行检修作业。</li>
+                        <li>加强现场安全监护，确保作业安全。</li>
+                        <li>强化安全培训教育，提高员工安全意识和操作技能。</li>
+                        <li>完善安全管理制度，堵塞管理漏洞。</li>
+                    </ul>
+                    <h3>防范措施</h3>
+                    <ul>
+                        <li>严格执行设备检修操作规程，落实"停机断电挂牌"制度。</li>
+                        <li>加强作业现场安全管理，设置安全警示标识。</li>
+                        <li>定期开展安全培训和应急演练，提高员工应急处置能力。</li>
+                        <li>加强安全检查，及时发现和消除安全隐患。</li>
+                    </ul>
+                `
+            },
+            {
+                title: '高处坠落事故案例分析',
+                date: '2025-11-20',
+                level: '较大事故',
+                duration: '6分钟',
+                body: `
+                    <h3>事故经过</h3>
+                    <p>2025年11月20日9时15分，某选煤厂在进行设备维护时，操作工李某在未系安全带的情况下，站在高度为3米的设备平台上进行作业，不慎坠落，造成腿部骨折。</p>
+                    <h3>事故原因</h3>
+                    <ul>
+                        <li><strong>直接原因：</strong>操作工李某未按规定佩戴安全带，安全防护措施不到位。</li>
+                        <li><strong>间接原因：</strong>现场安全管理不到位，未及时发现和制止违章行为。</li>
+                    </ul>
+                    <h3>防范措施</h3>
+                    <ul>
+                        <li>高处作业必须系好安全带，严禁违章操作。</li>
+                        <li>加强现场安全检查，及时制止违章行为。</li>
+                        <li>强化安全培训，提高员工安全意识。</li>
+                    </ul>
+                `
+            },
+            {
+                title: '触电事故案例分析',
+                date: '2025-10-08',
+                level: '一般事故',
+                duration: '5分钟',
+                body: `
+                    <h3>事故经过</h3>
+                    <p>2025年10月8日16时20分，某选煤厂电工张某在进行电气设备检修时，未按规定断电验电，直接进行检修作业，导致触电受伤。</p>
+                    <h3>事故原因</h3>
+                    <ul>
+                        <li><strong>直接原因：</strong>电工张某未按规定断电验电，违章操作。</li>
+                        <li><strong>间接原因：</strong>安全管理制度执行不到位，安全监护缺失。</li>
+                    </ul>
+                    <h3>防范措施</h3>
+                    <ul>
+                        <li>严格执行电气设备检修操作规程，先断电验电后作业。</li>
+                        <li>加强安全监护，确保作业安全。</li>
+                        <li>强化安全培训，提高员工安全操作技能。</li>
+                    </ul>
+                `
+            },
+            {
+                title: '机械伤害事故案例分析',
+                date: '2025-09-15',
+                level: '较大事故',
+                duration: '7分钟',
+                body: `
+                    <h3>事故经过</h3>
+                    <p>2025年9月15日10时45分，某选煤厂操作工赵某在操作输送设备时，衣物被卷入设备，导致手臂受伤。</p>
+                    <h3>事故原因</h3>
+                    <ul>
+                        <li><strong>直接原因：</strong>操作工赵某未按规定穿戴劳保用品，衣物过长。</li>
+                        <li><strong>间接原因：</strong>设备安全防护装置不完善，安全培训不到位。</li>
+                    </ul>
+                    <h3>防范措施</h3>
+                    <ul>
+                        <li>按规定穿戴劳保用品，严禁违章操作。</li>
+                        <li>完善设备安全防护装置。</li>
+                        <li>加强安全培训，提高员工安全意识。</li>
+                    </ul>
+                `
+            }
+        ];
+
+        function selectContent(index) {
+            currentContentIndex = index;
+            
+            const items = document.querySelectorAll('.content-item');
+            items.forEach((item, i) => {
+                if (i === index) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+
+            const content = contents[index];
+            const contentView = document.getElementById('contentView');
+            
+            contentView.innerHTML = `
+                <div class="content-view-title">${content.title}</div>
+                
+                <div class="content-view-meta">
+                    <span class="content-view-meta-item"><i class="bi bi-calendar"></i>${content.date}</span>
+                    <span class="content-view-meta-item"><i class="bi bi-exclamation-circle"></i>${content.level}</span>
+                    <span class="content-view-meta-item"><i class="bi bi-clock"></i>预计学习时间: ${content.duration}</span>
+                </div>
+
+                <div class="study-timer" id="studyTimer">00:00</div>
+
+                <div class="content-view-body">
+                    ${content.body}
+                </div>
+            `;
+
+            startTimer();
+        }
+
+        function startTimer() {
+            studyTime = 0;
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            timerInterval = setInterval(() => {
+                studyTime++;
+                const minutes = Math.floor(studyTime / 60);
+                const seconds = studyTime % 60;
+                document.getElementById('studyTimer').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function goToPage(pageName) {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            window.location.href = pageName + '.html';
+        }
+    </script>
+</body>
+</html>
