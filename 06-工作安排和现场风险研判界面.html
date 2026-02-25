@@ -1,0 +1,814 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工作安排和现场风险研判 - XX选煤班组安全平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #2563EB;
+            --primary-light: #3B82F6;
+            --primary-dark: #1E40AF;
+            --cta-color: #F97316;
+            --cta-hover: #EA580C;
+            --bg-color: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-color: #1E293B;
+            --text-secondary: #64748B;
+            --border-color: #E2E8F0;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+            --ai-primary: #8B5CF6;
+            --ai-secondary: #6366F1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Open Sans', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        .navbar {
+            background-color: var(--card-bg);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 0 32px;
+            height: 64px;
+            flex-shrink: 0;
+        }
+
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .navbar-brand i {
+            font-size: 24px;
+        }
+
+        .navbar-nav {
+            gap: 8px;
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .main-content {
+            padding: 24px 32px;
+            height: calc(100vh - 64px);
+            overflow: hidden;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-color);
+        }
+
+        .task-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            height: calc(100% - 100px);
+            overflow-y: auto;
+        }
+
+        .task-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .task-title {
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .task-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .task-info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-color);
+            margin-bottom: 0;
+        }
+
+        .form-control {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 14px;
+            transition: all 0.2s;
+            background-color: var(--bg-color);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-control:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        textarea.form-control {
+            resize: none;
+            min-height: 100px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .input-group .form-control {
+            flex: 1;
+        }
+
+        .btn-ai {
+            background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn-ai:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-ai:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn-ai:focus-visible {
+            outline: 2px solid var(--ai-primary);
+            outline-offset: 2px;
+        }
+
+        .ai-loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ai-loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-add {
+            background: var(--cta-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .btn-add:hover {
+            background: var(--cta-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+        }
+
+        .btn-add:focus-visible {
+            outline: 2px solid var(--cta-color);
+            outline-offset: 2px;
+        }
+
+        .btn-delete {
+            background: transparent;
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .btn-delete:hover {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-delete:focus-visible {
+            outline: 2px solid var(--danger-color);
+            outline-offset: 2px;
+        }
+
+        .risk-section {
+            margin-top: 16px;
+            padding: 16px;
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 8px;
+        }
+
+        .risk-section-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--danger-color);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+
+        .btn-outline:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 16px;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .task-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn-primary, .btn-outline {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="01-主界面.html">
+                <i class="bi bi-shield-check"></i>
+                <span>XX选煤班组安全平台</span>
+            </a>
+            <div class="navbar-nav">
+                <a class="nav-link active" href="#">班前会</a>
+                <a class="nav-link" href="#">班后会</a>
+                <a class="nav-link" href="#">学习会</a>
+            </div>
+            <div class="user-info">
+                <img src="https://via.placeholder.com/36" alt="张班长的头像" class="user-avatar">
+                <span class="user-name">张班长</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <h1 class="page-title">工作安排和现场风险研判</h1>
+
+        <div class="task-grid" id="taskGrid">
+            <div class="task-card">
+                <div class="task-header">
+                    <div class="task-title">任务1</div>
+                    <div class="task-actions">
+                        <button class="btn-delete" onclick="deleteTask(this)" aria-label="删除任务">
+                            <i class="bi bi-trash"></i>
+                            删除
+                        </button>
+                    </div>
+                </div>
+
+                <div class="task-info-grid">
+                    <div class="task-info-item">
+                        <label class="form-label" for="task1-name">任务名称</label>
+                        <input type="text" class="form-control" id="task1-name" value="皮带机日常巡检" aria-label="任务名称">
+                    </div>
+
+                    <div class="task-info-item">
+                        <label class="form-label" for="task1-assignee">负责人</label>
+                        <input type="text" class="form-control" id="task1-assignee" value="李安全员" aria-label="负责人">
+                    </div>
+
+                    <div class="task-info-item">
+                        <label class="form-label" for="task1-location">工作地点</label>
+                        <input type="text" class="form-control" id="task1-location" value="1号皮带机" aria-label="工作地点">
+                    </div>
+
+                    <div class="task-info-item">
+                        <label class="form-label" for="task1-time">工作时间</label>
+                        <input type="text" class="form-control" id="task1-time" value="09:00 - 11:00" aria-label="工作时间">
+                    </div>
+
+                    <div class="task-info-item" style="grid-column: span 2;">
+                        <label class="form-label" for="task1-content">工作任务内容</label>
+                        <div class="input-group">
+                            <textarea class="form-control" id="task1-content" rows="2" aria-label="工作任务内容">检查皮带机运行状态，查看轴承温度，检查皮带张紧度，清理皮带机周边杂物</textarea>
+                            <button class="btn-ai" onclick="generateRiskPoints('task1')" id="task1-ai-btn" aria-label="AI生成风险点和防范措施">
+                                <i class="bi bi-cpu"></i>
+                                AI生成
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="task-info-item" style="grid-column: span 2;">
+                        <label class="form-label" for="task1-risk">风险点</label>
+                        <textarea class="form-control" id="task1-risk" rows="2" aria-label="风险点">皮带机运行中可能发生绞伤事故；轴承温度过高可能引发火灾</textarea>
+                    </div>
+
+                    <div class="task-info-item" style="grid-column: span 2;">
+                        <label class="form-label" for="task1-measure">防范措施</label>
+                        <textarea class="form-control" id="task1-measure" rows="2" aria-label="防范措施">严格执行停机断电挂牌制度；佩戴防护用品；定期检查轴承温度；保持现场清洁</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="task-card">
+                <div class="task-header">
+                    <div class="task-title">任务2</div>
+                    <div class="task-actions">
+                        <button class="btn-delete" onclick="deleteTask(this)" aria-label="删除任务">
+                            <i class="bi bi-trash"></i>
+                            删除
+                        </button>
+                    </div>
+                </div>
+
+                <div class="task-info-grid">
+                    <div class="task-info-item">
+                        <label class="form-label" for="task2-name">任务名称</label>
+                        <input type="text" class="form-control" id="task2-name" value="高处照明检修" aria-label="任务名称">
+                    </div>
+
+                    <div class="task-info-item">
+                        <label class="form-label" for="task2-assignee">负责人</label>
+                        <input type="text" class="form-control" id="task2-assignee" value="王技术员" aria-label="负责人">
+                    </div>
+
+                    <div class="task-info-item">
+                        <label class="form-label" for="task2-location">工作地点</label>
+                        <input type="text" class="form-control" id="task2-location" value="3号皮带机顶部" aria-label="工作地点">
+                    </div>
+
+                    <div class="task-info-item">
+                        <label class="form-label" for="task2-time">工作时间</label>
+                        <input type="text" class="form-control" id="task2-time" value="09:30 - 10:30" aria-label="工作时间">
+                    </div>
+
+                    <div class="task-info-item" style="grid-column: span 2;">
+                        <label class="form-label" for="task2-content">工作任务内容</label>
+                        <div class="input-group">
+                            <textarea class="form-control" id="task2-content" rows="2" aria-label="工作任务内容">更换顶部照明灯具，检查线路连接情况</textarea>
+                            <button class="btn-ai" onclick="generateRiskPoints('task2')" id="task2-ai-btn" aria-label="AI生成风险点和防范措施">
+                                <i class="bi bi-cpu"></i>
+                                AI生成
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="task-info-item" style="grid-column: span 2;">
+                        <label class="form-label" for="task2-risk">风险点</label>
+                        <textarea class="form-control" id="task2-risk" rows="2" aria-label="风险点">高处作业可能发生坠落事故；带电作业可能发生触电事故</textarea>
+                    </div>
+
+                    <div class="task-info-item" style="grid-column: span 2;">
+                        <label class="form-label" for="task2-measure">防范措施</label>
+                        <textarea class="form-control" id="task2-measure" rows="2" aria-label="防范措施">系好安全带；设置安全监护人；断电验电后作业；佩戴绝缘手套</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="task-card">
+                <div class="task-header">
+                    <div class="task-title">任务3</div>
+                    <div class="task-actions">
+                        <button class="btn-delete" onclick="deleteTask(this)" aria-label="删除任务">
+                            <i class="bi bi-trash"></i>
+                            删除
+                        </button>
+                    </div>
+                </div>
+
+                <div class="task-info-grid">
+                    <div class="task-info-item">
+                        <label class="form-label" for="task3-name">任务名称</label>
+                        <input type="text" class="form-control" id="task3-name" value="设备润滑保养" aria-label="任务名称">
+                    </div>
+
+                    <div class="task-info-item">
+                        <label class="form-label" for="task3-assignee">负责人</label>
+                        <input type="text" class="form-control" id="task3-assignee" value="赵维修工" aria-label="负责人">
+                    </div>
+
+                    <div class="task-info-item">
+                        <label class="form-label" for="task3-location">工作地点</label>
+                        <input type="text" class="form-control" id="task3-location" value="2号皮带机" aria-label="工作地点">
+                    </div>
+
+                    <div class="task-info-item">
+                        <label class="form-label" for="task3-time">工作时间</label>
+                        <input type="text" class="form-control" id="task3-time" value="10:00 - 12:00" aria-label="工作时间">
+                    </div>
+
+                    <div class="task-info-item" style="grid-column: span 2;">
+                        <label class="form-label" for="task3-content">工作任务内容</label>
+                        <div class="input-group">
+                            <textarea class="form-control" id="task3-content" rows="2" aria-label="工作任务内容">检查各部位轴承润滑情况，补充润滑油，清理油污</textarea>
+                            <button class="btn-ai" onclick="generateRiskPoints('task3')" id="task3-ai-btn" aria-label="AI生成风险点和防范措施">
+                                <i class="bi bi-cpu"></i>
+                                AI生成
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="task-info-item" style="grid-column: span 2;">
+                        <label class="form-label" for="task3-risk">风险点</label>
+                        <textarea class="form-control" id="task3-risk" rows="2" aria-label="风险点">接触高温部件可能发生烫伤；润滑油泄漏可能造成滑倒</textarea>
+                    </div>
+
+                    <div class="task-info-item" style="grid-column: span 2;">
+                        <label class="form-label" for="task3-measure">防范措施</label>
+                        <textarea class="form-control" id="task3-measure" rows="2" aria-label="防范措施">佩戴防护手套；等待设备冷却后再操作；及时清理泄漏的润滑油</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: center; margin-top: 24px;">
+            <button class="btn-add" onclick="addTask()">
+                <i class="bi bi-plus-circle"></i>
+                添加任务
+            </button>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-outline" onclick="goToPage('05-事故案例学习界面')">
+                <i class="bi bi-arrow-left"></i>
+                返回
+            </button>
+            <button class="btn-primary" onclick="goToPage('07-每日一学和应知应会的抽查界面')">
+                下一步
+                <i class="bi bi-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let taskCount = 3;
+
+        function generateRiskPoints(taskId) {
+            const btn = document.getElementById(taskId + '-ai-btn');
+            const contentInput = document.getElementById(taskId + '-content');
+            const riskInput = document.getElementById(taskId + '-risk');
+            const measureInput = document.getElementById(taskId + '-measure');
+            
+            const content = contentInput.value;
+            
+            if (!content.trim()) {
+                alert('请先输入工作任务内容');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<div class="ai-loading"><i class="bi bi-cpu"></i>生成中...</div>';
+
+            setTimeout(() => {
+                const riskPoints = analyzeRiskPoints(content);
+                const measures = generateMeasures(content);
+
+                riskInput.value = riskPoints;
+                measureInput.value = measures;
+
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-cpu"></i>AI生成';
+            }, 1500);
+        }
+
+        function analyzeRiskPoints(content) {
+            const risks = [];
+            const lowerContent = content.toLowerCase();
+
+            if (lowerContent.includes('皮带机') || lowerContent.includes('皮带')) {
+                risks.push('皮带机运行中可能发生绞伤事故');
+            }
+            if (lowerContent.includes('轴承') || lowerContent.includes('润滑')) {
+                risks.push('轴承温度过高可能引发火灾');
+                risks.push('接触高温部件可能发生烫伤');
+            }
+            if (lowerContent.includes('高处') || lowerContent.includes('顶部')) {
+                risks.push('高处作业可能发生坠落事故');
+            }
+            if (lowerContent.includes('照明') || lowerContent.includes('电') || lowerContent.includes('线路')) {
+                risks.push('带电作业可能发生触电事故');
+            }
+            if (lowerContent.includes('检修') || lowerContent.includes('检查')) {
+                risks.push('设备运行中检修可能发生机械伤害');
+            }
+
+            if (risks.length === 0) {
+                risks.push('作业过程中可能发生机械伤害');
+            }
+
+            return risks.join('；');
+        }
+
+        function generateMeasures(content) {
+            const measures = [];
+            const lowerContent = content.toLowerCase();
+
+            if (lowerContent.includes('皮带机') || lowerContent.includes('皮带') || lowerContent.includes('检修')) {
+                measures.push('严格执行停机断电挂牌制度');
+            }
+            if (lowerContent.includes('高处') || lowerContent.includes('顶部')) {
+                measures.push('系好安全带');
+                measures.push('设置安全监护人');
+            }
+            if (lowerContent.includes('照明') || lowerContent.includes('电') || lowerContent.includes('线路')) {
+                measures.push('断电验电后作业');
+                measures.push('佩戴绝缘手套');
+            }
+            if (lowerContent.includes('轴承') || lowerContent.includes('润滑')) {
+                measures.push('佩戴防护手套');
+                measures.push('等待设备冷却后再操作');
+            }
+            measures.push('佩戴防护用品');
+            measures.push('保持现场清洁');
+
+            return measures.join('；');
+        }
+
+        function addTask() {
+            taskCount++;
+            const taskGrid = document.getElementById('taskGrid');
+            
+            const newTask = document.createElement('div');
+            newTask.className = 'task-card';
+            newTask.innerHTML = `
+                <div class="task-header">
+                    <div class="task-title">任务${taskCount}</div>
+                    <div class="task-actions">
+                        <button class="btn-delete" onclick="deleteTask(this)" aria-label="删除任务">
+                            <i class="bi bi-trash"></i>
+                            删除
+                        </button>
+                    </div>
+                </div>
+
+                <div class="task-info-grid">
+                    <div class="task-info-item">
+                        <label class="form-label" for="task${taskCount}-name">任务名称</label>
+                        <input type="text" class="form-control" id="task${taskCount}-name" value="" aria-label="任务名称">
+                    </div>
+
+                    <div class="task-info-item">
+                        <label class="form-label" for="task${taskCount}-assignee">负责人</label>
+                        <input type="text" class="form-control" id="task${taskCount}-assignee" value="" aria-label="负责人">
+                    </div>
+
+                    <div class="task-info-item">
+                        <label class="form-label" for="task${taskCount}-location">工作地点</label>
+                        <input type="text" class="form-control" id="task${taskCount}-location" value="" aria-label="工作地点">
+                    </div>
+
+                    <div class="task-info-item">
+                        <label class="form-label" for="task${taskCount}-time">工作时间</label>
+                        <input type="text" class="form-control" id="task${taskCount}-time" value="" aria-label="工作时间">
+                    </div>
+
+                    <div class="task-info-item" style="grid-column: span 2;">
+                        <label class="form-label" for="task${taskCount}-content">工作任务内容</label>
+                        <div class="input-group">
+                            <textarea class="form-control" id="task${taskCount}-content" rows="2" aria-label="工作任务内容"></textarea>
+                            <button class="btn-ai" onclick="generateRiskPoints('task${taskCount}')" id="task${taskCount}-ai-btn" aria-label="AI生成风险点和防范措施">
+                                <i class="bi bi-cpu"></i>
+                                AI生成
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="task-info-item" style="grid-column: span 2;">
+                        <label class="form-label" for="task${taskCount}-risk">风险点</label>
+                        <textarea class="form-control" id="task${taskCount}-risk" rows="2" aria-label="风险点"></textarea>
+                    </div>
+
+                    <div class="task-info-item" style="grid-column: span 2;">
+                        <label class="form-label" for="task${taskCount}-measure">防范措施</label>
+                        <textarea class="form-control" id="task${taskCount}-measure" rows="2" aria-label="防范措施"></textarea>
+                    </div>
+                </div>
+            `;
+            
+            taskGrid.appendChild(newTask);
+            newTask.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function deleteTask(btn) {
+            const taskCard = btn.closest('.task-card');
+            taskCard.remove();
+        }
+
+        function goToPage(pageName) {
+            window.location.href = pageName + '.html';
+        }
+    </script>
+</body>
+</html>
